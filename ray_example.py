@@ -10,10 +10,12 @@ port = 13337
 
 @ray.remote(num_gpus=1)
 class Server:
-    def __init__(self):
+    async def run_concurrent(self):
         self.my_data = torch.rand(10)
         print("server data:", self.my_data)
-        self.lf = ucp.create_listener(self.call_back.remote, port)
+        self.lf = ucp.create_listener(self.call_back, port)
+        while not lf.closed():
+            await asyncio.sleep(0.1)
 
     async def call_back(self, ep):
         arr = np.empty(n_bytes, dtype='u1')
@@ -34,4 +36,4 @@ class Server:
 if __name__ == "__main__":
     ray.init()
     server = Server.remote()
-    ray.get(server)
+    await server.run_concurrent()
