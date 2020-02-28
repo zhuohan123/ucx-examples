@@ -14,7 +14,7 @@ class Server:
         self.my_data = torch.rand(10)
         print("server data:", self.my_data)
         self.lf = ucp.create_listener(self.call_back, port)
-        while not lf.closed():
+        while not self.lf.closed():
             await asyncio.sleep(0.1)
 
     async def call_back(self, ep):
@@ -36,4 +36,4 @@ class Server:
 if __name__ == "__main__":
     ray.init()
     server = Server.remote()
-    await server.run_concurrent()
+    ray.get(server.run_concurrent.remote())
