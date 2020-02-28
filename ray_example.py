@@ -22,6 +22,7 @@ class Server:
         print("Sending data to client")
         await ep.send(self.my_data)
         await ep.close()
+        self.lf.close()
 
     def get_node_ip(self):
         """Returns the IP address of the current node."""
