@@ -30,9 +30,9 @@ class Server:
 @ray.remote(num_gpus=1)
 class Client:
     async def run_concurrent(self):
-        time.sleep(2)
+        time.sleep(10)
         ep = await ucp.create_endpoint(host, port)
-        msg = torch.empty(n_bytes, dtype=torch.float, device='cuda') # create some data to send
+        msg = torch.empty(n_elements, dtype=torch.float, device='cuda') # create some data to send
 
         print("Receive data from server")
         await ep.recv(msg)
