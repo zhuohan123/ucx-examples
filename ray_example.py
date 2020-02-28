@@ -11,6 +11,8 @@ port = 13337
 
 @ray.remote(num_gpus=1)
 class Server:
+    def __init__(self):
+        _ = torch.rand(1, dtype=torch.float, device='cuda')
     async def run_concurrent(self):
         self.my_data = torch.rand(n_elements, dtype=torch.float, device='cuda')
         print("server data:", self.my_data)
@@ -30,8 +32,10 @@ class Server:
 
 @ray.remote(num_gpus=1)
 class Client:
+    def __init__(self):
+        _ = torch.rand(1, dtype=torch.float, device='cuda')
     async def run_concurrent(self):
-        time.sleep(10)
+        time.sleep(5)
         ep = await ucp.create_endpoint(host, port)
         msg = torch.empty(n_elements, dtype=torch.float, device='cuda') # create some data to send
 
